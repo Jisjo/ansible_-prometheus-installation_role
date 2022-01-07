@@ -1,0 +1,49 @@
+---
+- name: "download and extract Prometheus"
+  unarchive:
+    src: https://github.com/prometheus/prometheus/releases/download/v2.32.1/prometheus-2.32.1.linux-amd64.tar.gz
+    dest: /tmp/
+    remote_src: true
+
+- name: "creating insllation directory"
+  file:
+    path: /opt/prometheus
+    state: directory
+
+- name: "copy conf files"
+  copy:
+    src: /tmp/prometheus-2.32.1.linux-amd64/
+    dest: /opt/prometheus/
+    remote_src: true
+  register: copy_conf_status
+
+
+- name: "updating prometheus.yml"
+  template:
+    src: "prometheus.yml.j2"
+    dest: "/opt/prometheus/prometheus.yml"
+    group: root
+    owner: root
+  register: copy_status
+
+
+- name: "copy service file"
+  template:
+    src: "prometheus.service.j2"
+    dest: "/etc/systemd/system/prometheus.service"
+    group: root
+    owner: root
+  register: copy_status
+
+- name: "set exec permission"
+  file:
+    path: "/opt/prometheus/prometheus"
+    mode: a+x
+
+- name: "start and enable service"
+#  when: copy_conf_status.changed == true or copy_status.changed == true
+  service:  
+    name: prometheus.service
+    state: restarted
+    enabled: yes
+    daemon_reload: yes

@@ -1,0 +1,43 @@
+---
+- name: "download and extract node export"
+  unarchive:
+    src: "{{ url_node_exporter }}"
+    dest: /tmp/
+    remote_src: true
+
+- name: "creating insllation directory"
+  file:
+    path: /opt/node-exporter
+    state: directory
+
+- name: "copy conf files"
+  copy:
+    src: /tmp/node_exporter-1.3.1.linux-amd64/
+    dest: /opt/node-exporter/
+    remote_src: true
+  register: copy_conf_status
+
+- name: "copy service file"
+  template:
+    src: "node_exporter.service.j2"
+    dest: "/etc/systemd/system/node_exporter.service"
+    group: root
+    owner: root
+  register: copy_status
+
+- name: "set exec permission"
+  file:
+    path: /opt/node-exporter/node_exporter
+    mode: a+x
+
+- name: "start and enable service"
+#  when: copy_conf_status.changed == true or copy_status.changed == true
+  service:  
+    name: node_exporter
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+
+- name: "output"
+  debug:
+    msg: "http://<ip>:9100"

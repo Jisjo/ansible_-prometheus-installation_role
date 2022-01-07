@@ -1,0 +1,4 @@
+---
+monitor_ip: "{{ grafana_ip }}"
+grafana_user: admin
+grafana_password: admin123

@@ -1,0 +1,10 @@
+---
+- name: "Install and config prometheus and grafana"
+  hosts: monitor
+  become: true
+  vars:
+    - node_ip: "172.31.38.242"
+    - grafana_ip: "172.31.38.234"
+  roles:
+    - prometheus
+    - grafana

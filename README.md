@@ -69,11 +69,11 @@ ansible-playbook -i hosts 02-prometheus.main.yml
 ```
 
 # Result
-> Grafana: http://<ip>:3000 
+> Grafana: http://ip_address:3000 
   
 ![screenshot](https://github.com/Jisjo/ansible_prometheus-installation_role/blob/main/Screenshot-grafana-1.png)
 
-> prometheus: http://<ip>:9090
+> prometheus: http://ip_address:9090
   
 ![image](https://github.com/Jisjo/ansible_prometheus-installation_role/blob/main/Screenshot-prom-1.png)
 
